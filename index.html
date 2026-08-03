@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Kepuasan Pelanggan (CSAT)</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 16px;
+        }
+
+        header h1 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* Rating Options */
+        .rating-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .rating-option {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rating-option:hover {
+            border-color: var(--primary);
+            background: #eef2ff;
+        }
+
+        .rating-option.selected {
+            border-color: var(--primary);
+            background: #e0e7ff;
+        }
+
+        .rating-option .emoji {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .rating-option .label-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Thank you / Result Box */
+        .thankyou-box {
+            display: none;
+            text-align: center;
+            padding: 24px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            margin-top: 20px;
+        }
+
+        .thankyou-box h2 {
+            color: #166534;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .thankyou-box p {
+            color: #15803d;
+            font-size: 0.95rem;
+        }
+
+        .csat-score {
+            margin-top: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.88rem;
+            color: var(--text);
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>⭐ Survey Kepuasan Pelanggan (CSAT)</h1>
+            <p>Bantu kami meningkatkan kualitas layanan dengan memberikan masukan Anda</p>
+        </header>
+
+        <form id="csat-form">
+            <div class="form-group">
+                <label for="nama">Nama Pelanggan / Inisial:</label>
+                <input type="text" id="nama" placeholder="Masukkan nama Anda" required>
+            </div>
+
+            <div class="form-group">
+                <label>Bagaimana pengalaman layanan kami secara keseluruhan?</label>
+                <div class="rating-group">
+                    <div class="rating-option" onclick="selectRating(this, 100, 'Sangat Puas')">
+                        <span class="emoji">😍</span>
+                        <span class="label-text">Sangat Puas</span>
+                    </div>
+                    <div class="rating-option" onclick="selectRating(this, 75, 'Puas')">
+                        <span class="emoji">😊</span>
+                        <span class="label-text">Puas</span>
+                    </div>
+                    <div class="rating-option" onclick="selectRating(this, 50, 'Cukup')">
+                        <span class="emoji">😐</span>
+                        <span class="label-text">Cukup</span>
+                    </div>
+                    <div class="rating-option" onclick="selectRating(this, 25, 'Kecewa')">
+                        <span class="emoji">😞</span>
+                        <span class="label-text">Kecewa</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="saran">Kritik, Saran, atau Masukan:</label>
+                <textarea id="saran" rows="4" placeholder="Tuliskan masukan Anda untuk perbaikan layanan kami..." required></textarea>
+            </div>
+
+            <button type="button" onclick="kirimSurvey()">Kirim Feedback 📩</button>
+        </form>
+
+        <div id="thankyou" class="thankyou-box">
+            <h2>Terima Kasih Atas Feedback Anda! 🎉</h2>
+            <p>Masukan Anda sangat berharga untuk evaluasi peningkatan mutu layanan bisnis kami.</p>
+            
+            <div class="csat-score" id="summary-text">
+                <!-- Ringkasan akan muncul di sini -->
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Sucii • Portofolio Layanan Pelanggan (CRM)</p>
+        </footer>
+    </div>
+
+    <script>
+        let selectedScore = null;
+        let selectedLabel = '';
+
+        function selectRating(element, score, label) {
+            // Hapus kelas selected dari semua opsi
+            const options = document.querySelectorAll('.rating-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            // Tambahkan kelas selected pada opsi yang dipilih
+            element.classList.add('selected');
+            selectedScore = score;
+            selectedLabel = label;
+        }
+
+        function kirimSurvey() {
+            const nama = document.getElementById('nama').value.trim();
+            const saran = document.getElementById('saran').value.trim();
+
+            if (!nama) {
+                alert('Silakan masukkan nama Anda!');
+                return;
+            }
+
+            if (!selectedScore) {
+                alert('Silakan pilih salah satu tingkat kepuasan layanan!');
+                return;
+            }
+
+            if (!saran) {
+                alert('Silakan tuliskan masukan atau saran Anda!');
+                return;
+            }
+
+            // Sembunyikan form dan tampilkan pesan terima kasih
+            document.getElementById('csat-form').style.display = 'none';
+            
+            const summary = document.getElementById('summary-text');
+            summary.innerHTML = `
+                <strong>Ringkasan Respon CSAT:</strong><br>
+                • <strong>Nama:</strong> ${nama}<br>
+                • <strong>Tingkat Kepuasan:</strong> ${selectedLabel} (${selectedScore}%)<br>
+                • <strong>Catatan/Saran:</strong> "${saran}"
+            `;
+
+            document.getElementById('thankyou').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
